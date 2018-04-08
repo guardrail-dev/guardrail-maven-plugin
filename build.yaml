@@ -1,0 +1,9 @@
+type: maven
+bump_version: true
+build:
+  dependencies:
+    - jdk-8-oracle
+    - apache-maven
+  commands: |
+    export JAVA_HOME=/usr/java/jdk1.8
+    mvn -B clean deploy
