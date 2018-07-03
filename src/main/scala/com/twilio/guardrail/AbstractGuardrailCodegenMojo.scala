@@ -6,7 +6,7 @@ import cats.instances.all._
 import cats.~>
 import com.twilio.guardrail._
 import com.twilio.guardrail.core.CoreTermInterp
-import com.twilio.guardrail.generators.AkkaHttp
+import com.twilio.guardrail.generators.GeneratorSettings
 import com.twilio.guardrail.terms.CoreTerms
 import com.twilio.guardrail.terms.{CoreTerm, CoreTerms, GetDefaultFramework}
 import java.io.File
@@ -55,7 +55,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
-  private[this] def runM[F[_]](args: List[Args])(implicit C: CoreTerms[F]): Free[F, NonEmptyList[ReadSwagger[Target[List[WriteTree]]]]] = {
+  private[this] def runM[F[_]](args: List[Args])(implicit C: CoreTerms[F]): Free[F, NonEmptyList[(GeneratorSettings, ReadSwagger[Target[List[WriteTree]]])]] = {
     import C._
 
     for {
@@ -128,12 +128,13 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
           case UnknownFramework(name) =>
             println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
             List.empty
-        }, _.toList.flatMap({ rs =>
+        }, _.toList.flatMap({ case (generatorSettings, rs) =>
         ReadSwagger.unsafeReadSwagger(rs)
           .fold({ err =>
             println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}")
             unsafePrintHelp()
           }, _.map(WriteTree.unsafeWriteTree).map(_.toFile))
+          .run(generatorSettings)
           .value
       })).value.distinct
     } catch {
