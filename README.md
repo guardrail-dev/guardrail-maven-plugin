@@ -7,26 +7,14 @@ Usage
 -----
 
 Add to your `pom.xml`:
-
-```
-<pluginRepositories>
-  ...
-  <pluginRepository>
-    <id>twilio.bintray</id>
-    <url>https://twilio.bintray.com/releases/</url>
-  </pluginRepository>
-  ...
-</pluginRepositories>
-```
-
 ```
 <build>
   <plugins>
     ...
     <plugin>
       <groupId>com.twilio</groupId>
-      <artifactId>guardrail-maven-plugin</artifactId>
-      <version>0.34.0</version>
+      <artifactId>guardrail-maven-plugin_2.12</artifactId>
+      <version>0.37.1-M1</version>
       <executions>
         <execution>
           <id>generate-petstore-client</id>
