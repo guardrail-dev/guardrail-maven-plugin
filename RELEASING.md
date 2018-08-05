@@ -4,4 +4,6 @@
 
 2. Create a release tag: [link](https://github.com/twilio/sbt-guardrail/releases)
 
-3. `mvn deploy`
+3. `mvn clean deploy -Possrh`
+
+4. `mvn clean deploy -Pbintray`

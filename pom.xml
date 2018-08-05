@@ -2,11 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.twilio</groupId>
-  <artifactId>guardrail-maven-plugin</artifactId>
+  <artifactId>guardrail-maven-plugin_2.12</artifactId>
   <version>0.37.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
+  <description>
+    Principled code generation for Scala services from OpenAPI specifications
+  </description>
 
   <url>https://github.com/twilio/guardrail-maven-plugin</url>
 
@@ -17,6 +20,25 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <organization>
+    <name>com.twilio</name>
+    <url>https://github.com/twilio/guardrail</url>
+  </organization>
+
+  <scm>
+    <url>https://github.com/twilio/guardrail</url>
+    <connection>scm:git@github.com:twilio/guardrail.git</connection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>blast_hardcheese</id>
+      <name>Devon Stewart</name>
+      <email>blast@hardchee.se</email>
+      <url>http://hardchee.se/</url>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,23 +51,31 @@
     <guardrail.version>0.37.0</guardrail.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>twilio.bintray</id>
-      <url>https://twilio.bintray.com/releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
-
-  <distributionManagement>
-    <repository>
-      <id>bintray-twilio-releases</id>
-      <name>twilio-releases</name>
-      <url>https://api.bintray.com/maven/twilio/releases/guardrail-maven-plugin/;publish=1</url>
-    </repository>
-  </distributionManagement>
+  <profiles>
+    <profile>
+      <id>bintray</id>
+      <distributionManagement>
+        <repository>
+          <id>bintray-twilio-releases</id>
+          <name>twilio-releases</name>
+          <url>https://api.bintray.com/maven/twilio/releases/guardrail-maven-plugin/;publish=1</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+    <profile>
+      <id>ossrh</id>
+      <distributionManagement>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>
@@ -87,7 +117,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.2</version>
         <configuration>
           <recompileMode>incremental</recompileMode>
           <args>
