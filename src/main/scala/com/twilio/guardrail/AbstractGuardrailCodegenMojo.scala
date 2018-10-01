@@ -80,8 +80,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       throw new MojoExecutionException(s"Swagger spec file at '${specPath.getAbsolutePath}' does not exist")
     }
 
-    val packageNames = Option(packageName).toList
-    val dtoPackages = Option(dtoPackage).toList
+    val packageNames = Option(packageName).map(_.trim.split('.').toList)
+    val dtoPackages = Option(dtoPackage).fold(List.empty[String])(_.trim.split('.').toList)
     val context = Context(Option(framework), tracing)
     val _kind: CodegenTarget = kind match {
       case "client" => CodegenTarget.Client
@@ -100,7 +100,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         kind=_kind
       , specPath=Some(specPath.getCanonicalPath())
       , outputPath=Some(outputPath.getCanonicalPath())
-      , packageName=Some(packageNames)
+      , packageName=packageNames
       , dtoPackage=dtoPackages
       , context=context
       , imports=processedCustomImports
