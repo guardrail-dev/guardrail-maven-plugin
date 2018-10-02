@@ -6,4 +6,6 @@
 
 3. `mvn clean deploy -Possrh`
 
+3a. Close and release the staged repository in https://oss.sonatype.org/
+
 4. `mvn clean deploy -Pbintray`
