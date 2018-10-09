@@ -1,6 +1,6 @@
 package com.twilio.guardrail
 
-import cats.data.NonEmptyList
+import cats.data.{EitherT, NonEmptyList, WriterT}
 import cats.free.Free
 import cats.instances.all._
 import cats.~>
@@ -129,13 +129,20 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
             List.empty
         }, _.toList.flatMap({ case (generatorSettings, rs) =>
-        ReadSwagger.unsafeReadSwagger(rs)
+          EitherT.fromEither[Settings](ReadSwagger.readSwagger(rs))
+          .flatMap(identity)
           .fold({ err =>
-            println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}")
-            unsafePrintHelp()
-          }, _.map(WriteTree.unsafeWriteTree).map(_.toFile))
-          .run(generatorSettings)
-          .value
+              println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}")
+              throw new Exception(err.toString)
+            }, _.map(WriteTree.unsafeWriteTreeLogged).map({ case WriterT((lines, path)) =>
+              if (lines.nonEmpty) {
+                lines.foreach(err => println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}"))
+                throw new Exception()
+              }
+              path
+            }).map(_.toFile))
+            .run(generatorSettings)
+            .value
       })).value.distinct
     } catch {
       case NonFatal(e) =>
