@@ -134,13 +134,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
           .fold({ err =>
               println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}")
               throw new Exception(err.toString)
-            }, _.map(WriteTree.unsafeWriteTreeLogged).map({ case WriterT((lines, path)) =>
-              if (lines.nonEmpty) {
-                lines.foreach(err => println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}"))
-                throw new Exception()
-              }
-              path
-            }).map(_.toFile))
+            }, _.map(WriteTree.unsafeWriteTreeLogged).map(_.value.toFile))
             .run(generatorSettings)
             .value
       })).value.distinct
