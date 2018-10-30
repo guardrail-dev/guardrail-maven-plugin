@@ -46,3 +46,4 @@ To generate multiple clients, specify multiple `<execution>` sections.
 | tracing | Whether or not to generate clients that accept a `TracingContext` which will send tracing headers to the remote service (defaults to `false`) |
 | kind | What kind of code should be generated (defaults to `client`. Valid values are: `client`, `server`) |
 | customImports | A list of `<customImport>`s that will be added to the top of all generated files. Useful for providing additional typeclass instances or domain-specific types |
+| framework | The framework to generate the code for (defaults to `akka-http`) |
