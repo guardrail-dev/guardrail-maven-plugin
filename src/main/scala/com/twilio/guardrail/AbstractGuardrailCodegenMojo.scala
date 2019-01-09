@@ -2,10 +2,11 @@ package com.twilio.guardrail
 
 import cats.data.{EitherT, NonEmptyList, WriterT}
 import cats.free.Free
-import cats.instances.all._
+import cats.implicits._
 import cats.~>
 import com.twilio.guardrail._
 import com.twilio.guardrail.core.CoreTermInterp
+import com.twilio.guardrail.languages.{ ScalaLanguage, LA }
 import com.twilio.guardrail.terms.CoreTerms
 import com.twilio.guardrail.terms.{CoreTerm, CoreTerms, GetDefaultFramework}
 import java.io.File
@@ -54,7 +55,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
-  private[this] def runM[F[_]](args: List[Args])(implicit C: CoreTerms[F]): Free[F, NonEmptyList[ReadSwagger[Target[List[WriteTree]]]]] = {
+  private[this] def runM[L <: LA, F[_]](args: List[Args])(implicit C: CoreTerms[L, F]): Free[F, NonEmptyList[ReadSwagger[Target[List[WriteTree]]]]] = {
     import C._
 
     for {
@@ -105,8 +106,15 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       , imports=processedCustomImports
       )
 
-      runM[CoreTerm](List(arg)).foldMap(CoreTermInterp)
-        .fold({
+      runM[ScalaLanguage, CoreTerm[ScalaLanguage, ?]](List(arg)).foldMap(
+        CoreTermInterp[ScalaLanguage](
+          "akka-http", {
+            case "akka-http" => com.twilio.guardrail.generators.AkkaHttp
+            case "http4s"    => com.twilio.guardrail.generators.Http4s
+          }, {
+            _.parse[Importer].toEither.bimap(err => UnparseableArgument("import", err.toString), importer => Import(List(importer)))
+          }
+        )).fold({
           case MissingArg(args, Error.ArgName(arg)) =>
             println(s"${AnsiColor.RED}Missing argument:${AnsiColor.RESET} ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
             unsafePrintHelp()

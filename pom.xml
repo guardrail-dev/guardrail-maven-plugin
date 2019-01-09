@@ -124,8 +124,16 @@
             <arg>-unchecked</arg>
             <arg>-deprecation</arg>
             <arg>-feature</arg>
+            <arg>-Xexperimental</arg>
           </args>
           <charset>UTF-8</charset>
+          <compilerPlugins>
+            <compilerPlugin>
+              <groupId>org.spire-math</groupId>
+              <artifactId>kind-projector_2.12</artifactId>
+              <version>0.9.4</version>
+            </compilerPlugin>
+          </compilerPlugins>
         </configuration>
         <executions>
           <execution>
