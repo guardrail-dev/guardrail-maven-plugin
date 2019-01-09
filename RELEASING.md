@@ -2,7 +2,7 @@
 
 2. `mvn versions:set -DnewVersion=0.34.1 -DgenerateBackupPoms=false`
 
-2. Create a release tag: [link](https://github.com/twilio/sbt-guardrail/releases)
+2. Create a release tag: [link](https://github.com/twilio/guardrail-maven-plugin/releases)
 
 3. `mvn clean deploy -Possrh`
 
