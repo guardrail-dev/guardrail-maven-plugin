@@ -86,6 +86,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     val _kind: CodegenTarget = kind match {
       case "client" => CodegenTarget.Client
       case "server" => CodegenTarget.Server
+      case "models" => CodegenTarget.Models
       case x => throw new MojoExecutionException(s"Unsupported codegen type: ${x}")
     }
 
