@@ -10,14 +10,10 @@ import com.twilio.guardrail.languages.{ ScalaLanguage, LA }
 import com.twilio.guardrail.terms.CoreTerms
 import com.twilio.guardrail.terms.{CoreTerm, CoreTerms, GetDefaultFramework}
 import java.io.File
-import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.Paths
-import java.nio.file.{Files, Path, StandardOpenOption}
 import org.apache.maven.plugin.{AbstractMojo, MojoExecutionException, MojoFailureException}
-import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter}
+import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.project.MavenProject
 import scala.collection.JavaConverters._
-import scala.collection.immutable
 import scala.io.AnsiColor
 import scala.language.higherKinds
 import scala.meta._
@@ -66,8 +62,6 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     } yield writeTrees
   }
 
-  private[this] def unsafePrintHelp(): List[java.io.File] = List.empty
-
   override def execute(): Unit = {
     if (!outputPath.exists()) {
       outputPath.mkdirs()
@@ -92,9 +86,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       case x => throw new MojoExecutionException(s"Unsupported codegen type: ${x}")
     }
 
-
     getLog.info(s"Generating ${_kind} from ${specPath.getName}")
-
 
     try {
       val processedCustomImports: List[String] = Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
@@ -111,34 +103,35 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
     val preppedTasks = List(arg)
 
-    val result = runM[ScalaLanguage, CoreTerm[ScalaLanguage, ?]](preppedTasks).foldMap(CoreTermInterp[ScalaLanguage](
-      "akka-http", {
-        case "akka-http" => com.twilio.guardrail.generators.AkkaHttp
-        case "http4s"    => com.twilio.guardrail.generators.Http4s
-      }, {
-        _.parse[Importer].toEither.bimap(err => UnparseableArgument("import", err.toString), importer => Import(List(importer)))
-      }
-    )).fold[List[ReadSwagger[Target[List[WriteTree]]]]]({
-        case MissingArg(args, Error.ArgName(arg)) =>
-          println(s"${AnsiColor.RED}Missing argument:${AnsiColor.RESET} ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
-          throw new CodegenFailedException()
-        case NoArgsSpecified =>
-          List.empty
-        case NoFramework =>
-          println(s"${AnsiColor.RED}No framework specified${AnsiColor.RESET}")
-          throw new CodegenFailedException()
-        case PrintHelp =>
-          List.empty
-        case UnknownArguments(args) =>
-          println(s"${AnsiColor.RED}Unknown arguments: ${args.mkString(" ")}${AnsiColor.RESET}")
-          throw new CodegenFailedException()
-        case UnparseableArgument(name, message) =>
-          println(s"${AnsiColor.RED}Unparseable argument ${name}: ${message}${AnsiColor.RESET}")
-          throw new CodegenFailedException()
-        case UnknownFramework(name) =>
-          println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
-          throw new CodegenFailedException()
-      }, _.toList)
+    val result = runM[ScalaLanguage, CoreTerm[ScalaLanguage, ?]](preppedTasks)
+      .foldMap(CoreTermInterp[ScalaLanguage](
+        "akka-http", {
+          case "akka-http" => com.twilio.guardrail.generators.AkkaHttp
+          case "http4s"    => com.twilio.guardrail.generators.Http4s
+        }, {
+          _.parse[Importer].toEither.bimap(err => UnparseableArgument("import", err.toString), importer => Import(List(importer)))
+        }
+      )).fold[List[ReadSwagger[Target[List[WriteTree]]]]]({
+          case MissingArg(args, Error.ArgName(arg)) =>
+            println(s"${AnsiColor.RED}Missing argument:${AnsiColor.RESET} ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
+            throw new CodegenFailedException()
+          case NoArgsSpecified =>
+            List.empty
+          case NoFramework =>
+            println(s"${AnsiColor.RED}No framework specified${AnsiColor.RESET}")
+            throw new CodegenFailedException()
+          case PrintHelp =>
+            List.empty
+          case UnknownArguments(args) =>
+            println(s"${AnsiColor.RED}Unknown arguments: ${args.mkString(" ")}${AnsiColor.RESET}")
+            throw new CodegenFailedException()
+          case UnparseableArgument(name, message) =>
+            println(s"${AnsiColor.RED}Unparseable argument ${name}: ${message}${AnsiColor.RESET}")
+            throw new CodegenFailedException()
+          case UnknownFramework(name) =>
+            println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
+            throw new CodegenFailedException()
+        }, _.toList)
 
     val (coreLogger, deferred) = result.run
 
