@@ -14,7 +14,7 @@ Add to your `pom.xml`:
     <plugin>
       <groupId>com.twilio</groupId>
       <artifactId>guardrail-maven-plugin_2.12</artifactId>
-      <version>0.37.1-M1</version>
+      <version>Please use the latest available release!</version>
       <executions>
         <execution>
           <id>generate-petstore-client</id>
