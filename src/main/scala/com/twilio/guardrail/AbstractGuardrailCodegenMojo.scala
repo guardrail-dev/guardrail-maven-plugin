@@ -133,7 +133,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             throw new CodegenFailedException()
         }, _.toList)
 
-    val (coreLogger, deferred) = result.run
+    val (coreLogger, deferred) = result.runEmpty
 
     val (logger, paths) = deferred
       .traverse({ rs =>
@@ -155,7 +155,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
           )
       })
       .map(_.flatten)
-      .run
+      .runEmpty
     } catch {
       case NonFatal(e) =>
         getLog.error("Failed to generate client", e)
