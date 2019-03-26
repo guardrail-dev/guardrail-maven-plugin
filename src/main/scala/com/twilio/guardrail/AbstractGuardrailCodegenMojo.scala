@@ -29,6 +29,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
 
+  @Parameter(property = "language", defaultValue = "java")
+  var language: String = _
+
   @Parameter(property = "kind", defaultValue = "client")
   var kind: String = _
 
@@ -53,15 +56,6 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
-  private[this] def runM[L <: LA, F[_]](args: List[Args])(implicit C: CoreTerms[L, F]): Free[F, NonEmptyList[ReadSwagger[Target[List[WriteTree]]]]] = {
-    import C._
-
-    for {
-      args <- validateArgs(args)
-      writeTrees <- Common.processArgs(args)
-    } yield writeTrees
-  }
-
   override def execute(): Unit = {
     if (!outputPath.exists()) {
       outputPath.mkdirs()
@@ -72,46 +66,47 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       case Test => project.addTestCompileSourceRoot(outputPath.getAbsolutePath)
     }
 
-    if (!specPath.exists()) {
-      throw new MojoExecutionException(s"Swagger spec file at '${specPath.getAbsolutePath}' does not exist")
-    }
-
-    val packageNames = Option(packageName).map(_.trim.split('.').toList)
-    val dtoPackages = Option(dtoPackage).fold(List.empty[String])(_.trim.split('.').toList)
-    val context = Context(Option(framework), tracing)
-    val _kind: CodegenTarget = kind match {
-      case "client" => CodegenTarget.Client
-      case "server" => CodegenTarget.Server
-      case "models" => CodegenTarget.Models
-      case x => throw new MojoExecutionException(s"Unsupported codegen type: ${x}")
-    }
-
-    getLog.info(s"Generating ${_kind} from ${specPath.getName}")
 
     try {
-      val processedCustomImports: List[String] = Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
+      val _kind: CodegenTarget = kind match {
+        case "client" => CodegenTarget.Client
+        case "server" => CodegenTarget.Server
+        case "models" => CodegenTarget.Models
+        case x => throw new MojoExecutionException(s"Unsupported codegen type: ${x}")
+      }
 
       val arg = Args.empty.copy(
-        kind=_kind
-      , specPath=Some(specPath.getCanonicalPath())
-      , outputPath=Some(outputPath.getCanonicalPath())
-      , packageName=packageNames
-      , dtoPackage=dtoPackages
-      , context=context
-      , imports=processedCustomImports
+        kind=_kind,
+        specPath=Some(specPath.getCanonicalPath()),
+        packageName=Option(packageName).map(_.trim.split('.').toList),
+        dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
+        context=Context.empty.copy(
+          tracing=Option(tracing).getOrElse(Context.empty.tracing)
+        ),
+        imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
       )
 
-    val preppedTasks = List(arg)
+      getLog.info(s"Generating ${_kind} from ${specPath.getName}")
 
-    val result = runM[ScalaLanguage, CoreTerm[ScalaLanguage, ?]](preppedTasks)
-      .foldMap(CoreTermInterp[ScalaLanguage](
-        "akka-http", {
-          case "akka-http" => com.twilio.guardrail.generators.AkkaHttp
-          case "http4s"    => com.twilio.guardrail.generators.Http4s
-        }, {
-          _.parse[Importer].toEither.bimap(err => UnparseableArgument("import", err.toString), importer => Import(List(importer)))
-        }
-      )).fold[List[ReadSwagger[Target[List[WriteTree]]]]]({
+      guardrailTask(List((language, arg)), outputPath)
+    } catch {
+      case NonFatal(e) =>
+        getLog.error("Failed to generate client", e)
+        throw new MojoFailureException(s"Failed to generate client from '${specPath.getAbsolutePath}': $e", e)
+    }
+  }
+
+  type Language = String
+  def guardrailTask(tasks: List[(Language, Args)], sourceDir: java.io.File): Seq[java.io.File] = {
+    val preppedTasks: Map[String, NonEmptyList[Args]] = tasks.foldLeft(Map.empty[String, NonEmptyList[Args]]) { case (acc, (language, args)) =>
+      val prepped = args.copy(outputPath=Some(sourceDir.getPath))
+      acc.updated(language, acc.get(language).fold(NonEmptyList.one(prepped))(_ :+ prepped))
+    }
+
+    val (logger, paths) =
+      CLI.guardrailRunner(_ => PartialFunction.empty)
+        .apply(preppedTasks)
+        .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>
             println(s"${AnsiColor.RED}Missing argument:${AnsiColor.RESET} ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
             throw new CodegenFailedException()
@@ -131,35 +126,14 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
           case UnknownFramework(name) =>
             println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
             throw new CodegenFailedException()
-        }, _.toList)
-
-    val (coreLogger, deferred) = result.runEmpty
-
-    val (logger, paths) = deferred
-      .traverse({ rs =>
-        ReadSwagger
-          .readSwagger(rs)
-          .fold(
-            { err =>
-              println(s"${AnsiColor.RED}${err}${AnsiColor.RESET}")
-              throw new CodegenFailedException()
-            },
-            _.fold(
-              {
-                case err =>
-                  println(s"${AnsiColor.RED}Error: ${err}${AnsiColor.RESET}")
-                  throw new CodegenFailedException()
-              },
-              _.map(WriteTree.unsafeWriteTree)
-            )
-          )
-      })
-      .map(_.flatten)
-      .runEmpty
-    } catch {
-      case NonFatal(e) =>
-        getLog.error("Failed to generate client", e)
-        throw new MojoFailureException(s"Failed to generate client from '${specPath.getAbsolutePath}': $e", e)
-    }
+          case RuntimeFailure(message) =>
+            println(s"${AnsiColor.RED}Error:${AnsiColor.RESET}${message}")
+            throw new CodegenFailedException()
+          case UserError(message) =>
+            println(s"${AnsiColor.RED}Error:${AnsiColor.RESET}${message}")
+            throw new CodegenFailedException()
+        }, identity)
+        .runEmpty
+    paths.map(_.toFile).distinct
   }
 }

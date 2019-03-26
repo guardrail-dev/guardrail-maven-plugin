@@ -48,7 +48,7 @@
     <plexus-utils.version>3.2.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.8</scala.version>
-    <guardrail.version>0.45.0</guardrail.version>
+    <guardrail.version>0.45.1</guardrail.version>
   </properties>
 
   <profiles>
