@@ -29,7 +29,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
 
-  @Parameter(property = "language", defaultValue = "java")
+  @Parameter(property = "language")
   var language: String = _
 
   @Parameter(property = "kind", defaultValue = "client")
@@ -68,6 +68,10 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
 
     try {
+      val _language: String = Option(language).getOrElse({
+        getLog.warn(s"[guardrail-maven-plugin] Default behaviour changing: Please specify <language>scala</language> to maintain the current settings. The default language will change to 'java' in a future release.")
+        "scala"
+      })
       val _kind: CodegenTarget = kind match {
         case "client" => CodegenTarget.Client
         case "server" => CodegenTarget.Server
@@ -88,7 +92,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
       getLog.info(s"Generating ${_kind} from ${specPath.getName}")
 
-      guardrailTask(List((language, arg)), outputPath)
+      guardrailTask(List((_language, arg)), outputPath)
     } catch {
       case NonFatal(e) =>
         getLog.error("Failed to generate client", e)

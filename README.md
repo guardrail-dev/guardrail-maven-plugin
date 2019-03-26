@@ -41,7 +41,7 @@ To generate multiple clients, specify multiple `<execution>` sections.
 | Parameter Name | Description |
 |:---------------|:------------|
 | outputPath | Location of generated classes (defaults to `${project.build.directory}/generated-sources/swagger-clients`) |
-| language | Which language to generate (defaults to `java`. Valid values are: `java`, `scala`) |
+| language | Which language to generate (defaults to `scala` currently, will change to `java` in the future. Valid values are: `java`, `scala`) |
 | kind | What kind of code should be generated (defaults to `client`. Valid values are: `client`, `server`, `models`) |
 | specPath | Location of the swagger specification file |
 | packageName | Package name to use for the generated classes |
