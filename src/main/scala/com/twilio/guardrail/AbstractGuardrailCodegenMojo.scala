@@ -85,6 +85,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         packageName=Option(packageName).map(_.trim.split('.').toList),
         dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
         context=Context.empty.copy(
+          framework=Option(framework),
           tracing=Option(tracing).getOrElse(Context.empty.tracing)
         ),
         imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
