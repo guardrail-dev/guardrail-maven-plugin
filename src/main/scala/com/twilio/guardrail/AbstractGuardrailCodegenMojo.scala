@@ -9,6 +9,8 @@ import com.twilio.guardrail.core.CoreTermInterp
 import com.twilio.guardrail.languages.{ ScalaLanguage, LA }
 import com.twilio.guardrail.terms.CoreTerms
 import com.twilio.guardrail.terms.{CoreTerm, CoreTerms, GetDefaultFramework}
+import com.twilio.swagger.core.StructuredLogger._
+import com.twilio.swagger.core.{LogLevel, LogLevels}
 import java.io.File
 import org.apache.maven.plugin.{AbstractMojo, MojoExecutionException, MojoFailureException}
 import org.apache.maven.plugins.annotations.Parameter
@@ -16,7 +18,6 @@ import org.apache.maven.project.MavenProject
 import scala.collection.JavaConverters._
 import scala.io.AnsiColor
 import scala.language.higherKinds
-import scala.meta._
 import scala.util.control.NonFatal
 
 class CodegenFailedException extends Exception
@@ -91,9 +92,11 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
       )
 
+      val logLevel = Option(System.getProperty("guardrail.loglevel")).flatMap(LogLevels.apply).getOrElse(LogLevels.Warning)
+
       getLog.info(s"Generating ${_kind} from ${specPath.getName}")
 
-      guardrailTask(List((_language, arg)), outputPath)
+      guardrailTask(List((_language, arg)), outputPath)(logLevel)
     } catch {
       case NonFatal(e) =>
         getLog.error("Failed to generate client", e)
@@ -102,7 +105,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   }
 
   type Language = String
-  def guardrailTask(tasks: List[(Language, Args)], sourceDir: java.io.File): Seq[java.io.File] = {
+  def guardrailTask(tasks: List[(Language, Args)], sourceDir: java.io.File)(implicit logLevel: LogLevel): Seq[java.io.File] = {
     val preppedTasks: Map[String, NonEmptyList[Args]] = tasks.foldLeft(Map.empty[String, NonEmptyList[Args]]) { case (acc, (language, args)) =>
       val prepped = args.copy(outputPath=Some(sourceDir.getPath))
       acc.updated(language, acc.get(language).fold(NonEmptyList.one(prepped))(_ :+ prepped))
@@ -139,6 +142,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             throw new CodegenFailedException()
         }, identity)
         .runEmpty
+
+    print(logger.show)
+
     paths.map(_.toFile).distinct
   }
 }
