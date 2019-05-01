@@ -49,3 +49,9 @@ To generate multiple clients, specify multiple `<execution>` sections.
 | tracing | Whether or not to generate clients that accept a `TracingContext` which will send tracing headers to the remote service (defaults to `false`) |
 | customImports | A list of `<customImport>`s that will be added to the top of all generated files. Useful for providing additional typeclass instances or domain-specific types |
 | framework | The framework to generate the code for (defaults to `akka-http`) |
+
+The plugin also interprets a single system property:
+
+| Property | Description |
+|:---------|:------------|
+| `guardrail.loglevel` | Changes Guardrail's log level.  Possible options are "debug", "info", "warning" (the default), "error", and "silent". |
