@@ -33,6 +33,6 @@ before_install:
   fi
 after_success:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ] && [[ "$TRAVIS_TAG" = v* ]]; then
-    mvn clean deploy -Possrh -Ddeploy.username="${SONATYPE_USERNAME}" -Ddeploy.password="${SONATYPE_PASSWORD}" -Darguments="-Dgpg.passphrase=${PGP_PASS}";
-    mvn clean deploy -Pbintray -Ddeploy.username="${BINTRAY_USERNAME}" -Ddeploy.password="${BINTRAY_PASS}" -Darguments="-Dgpg.passphrase=${PGP_PASS}";
+    mvn clean deploy -Possrh -Ddeploy.username="${SONATYPE_USERNAME}" -Ddeploy.password="${SONATYPE_PASSWORD}" -Dgpg.passphrase="${PGP_PASS}";
+    mvn clean deploy -Pbintray -Ddeploy.username="${BINTRAY_USERNAME}" -Ddeploy.password="${BINTRAY_PASS}" -Dgpg.passphrase="${PGP_PASS}";
   fi
