@@ -30,9 +30,10 @@ before_install:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ] && [[ "$TRAVIS_TAG" = v* ]]; then
     openssl aes-256-cbc -K $encrypted_9eb262af688a_key -iv $encrypted_9eb262af688a_iv -in travis/secrets.tar.enc -out travis/local.secrets.tar -d;
     tar xv -C travis -f travis/local.secrets.tar;
+    gpg --fast-import travis/local.secring.asc;
   fi
 after_success:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ] && [[ "$TRAVIS_TAG" = v* ]]; then
-    mvn clean deploy -Possrh -Ddeploy.username="${SONATYPE_USERNAME}" -Ddeploy.password="${SONATYPE_PASSWORD}" -Dgpg.passphrase="${PGP_PASS}";
-    mvn clean deploy -Pbintray -Ddeploy.username="${BINTRAY_USERNAME}" -Ddeploy.password="${BINTRAY_PASS}" -Dgpg.passphrase="${PGP_PASS}";
+    mvn clean deploy -Possrh -Ddeploy.username="${SONATYPE_USERNAME}" -Ddeploy.password="${SONATYPE_PASSWORD}" -Dgpg.passphrase="${PGP_PASS}" -Darguments=-Dgpg.keyname="${PGP_KEYID}";
+    mvn clean deploy -Pbintray -Ddeploy.username="${BINTRAY_USERNAME}" -Ddeploy.password="${BINTRAY_PASS}" -Dgpg.passphrase="${PGP_PASS}" -Darguments=-Dgpg.keyname="${PGP_KEYID}";
   fi
