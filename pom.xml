@@ -69,6 +69,11 @@
           </plugin>
         </plugins>
       </build>
+      <properties>
+        <gpg.executable>gpg</gpg.executable>
+        <gpg.keyname>${env.PGP_KEYID}</gpg.keyname>
+        <gpg.passphrase>${env.PGP_PASS}</gpg.passphrase>
+      </properties>
     </profile>
     <profile>
       <id>ossrh</id>
@@ -90,6 +95,11 @@
           </plugin>
         </plugins>
       </build>
+      <properties>
+        <gpg.executable>gpg</gpg.executable>
+        <gpg.keyname>${env.PGP_KEYID}</gpg.keyname>
+        <gpg.passphrase>${env.PGP_PASS}</gpg.passphrase>
+      </properties>
     </profile>
   </profiles>
 
