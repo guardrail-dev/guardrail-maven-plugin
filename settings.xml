@@ -1,0 +1,14 @@
+<settings>
+  <servers>
+    <server>
+      <id>bintray-twilio-releases</id>
+      <username>${env.BINTRAY_USER}</username>
+      <password>${env.BINTRAY_PASS}</password>
+    </server>
+    <server>
+      <id>ossrh</id>
+      <username>${env.SONATYPE_USERNAME}</username>
+      <password>${env.SONATYPE_PASSWORD}</password>
+    </server>
+  </servers>
+</settings>
