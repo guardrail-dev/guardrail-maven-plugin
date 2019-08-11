@@ -57,6 +57,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
+  protected def cli: CLICommon
+
   override def execute(): Unit = {
     if (!outputPath.exists()) {
       outputPath.mkdirs()
@@ -112,7 +114,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     }
 
     val (logger, paths) =
-      CLI.guardrailRunner
+      cli.guardrailRunner
         .apply(preppedTasks)
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>

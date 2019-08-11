@@ -7,4 +7,6 @@ import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter}
 class GuardrailTestCodegenMojo extends AbstractGuardrailCodegenMojo(Test) {
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/swagger-test-clients", property = "outputPath", required = true)
   var outputPath: File = _
+
+  override protected def cli: CLICommon = CLI
 }
