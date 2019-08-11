@@ -1,14 +1,7 @@
 package com.twilio.guardrail
 
-import cats.data.{EitherT, NonEmptyList, WriterT}
-import cats.free.Free
+import cats.data.NonEmptyList
 import cats.implicits._
-import cats.~>
-import com.twilio.guardrail._
-import com.twilio.guardrail.core.CoreTermInterp
-import com.twilio.guardrail.languages.{ ScalaLanguage, LA }
-import com.twilio.guardrail.terms.CoreTerms
-import com.twilio.guardrail.terms.{CoreTerm, CoreTerms, GetDefaultFramework}
 import com.twilio.swagger.core.StructuredLogger._
 import com.twilio.swagger.core.{LogLevel, LogLevels}
 import java.io.File
@@ -118,29 +111,29 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         .apply(preppedTasks)
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>
-            println(s"${AnsiColor.RED}Missing argument:${AnsiColor.RESET} ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
+            getLog.error(s"Missing argument: ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
             throw new CodegenFailedException()
           case NoArgsSpecified =>
             List.empty
           case NoFramework =>
-            println(s"${AnsiColor.RED}No framework specified${AnsiColor.RESET}")
+            getLog.error("No framework specified")
             throw new CodegenFailedException()
           case PrintHelp =>
             List.empty
           case UnknownArguments(args) =>
-            println(s"${AnsiColor.RED}Unknown arguments: ${args.mkString(" ")}${AnsiColor.RESET}")
+            getLog.error(s"Unknown arguments: ${args.mkString(" ")}")
             throw new CodegenFailedException()
           case UnparseableArgument(name, message) =>
-            println(s"${AnsiColor.RED}Unparseable argument ${name}: ${message}${AnsiColor.RESET}")
+            getLog.error(s"Unparseable argument ${name}: ${message}")
             throw new CodegenFailedException()
           case UnknownFramework(name) =>
-            println(s"${AnsiColor.RED}Unknown framework specified: ${name}${AnsiColor.RESET}")
+            getLog.error(s"Unknown framework specified: ${name}")
             throw new CodegenFailedException()
           case RuntimeFailure(message) =>
-            println(s"${AnsiColor.RED}Error:${AnsiColor.RESET}${message}")
+            getLog.error(s"Error: ${message}")
             throw new CodegenFailedException()
           case UserError(message) =>
-            println(s"${AnsiColor.RED}Error:${AnsiColor.RESET}${message}")
+            getLog.error(s"Error: ${message}")
             throw new CodegenFailedException()
         }, identity)
         .runEmpty
