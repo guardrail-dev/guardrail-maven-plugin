@@ -1,36 +1,10 @@
 package com.twilio.guardrail.m2repo
 
 import java.io.File
-import java.util.Locale
 import org.apache.maven.artifact.DefaultArtifact
-import org.apache.maven.artifact.handler.ArtifactHandler
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.project.MavenProject
-
-private[guardrail] sealed trait SpecFileType {
-  def extension: String
-}
-case class Yaml(extension: String) extends SpecFileType { override def toString: String = "yaml" }
-case class Json(extension: String) extends SpecFileType { override def toString: String = "json" }
-
-private[guardrail] object SpecFileType {
-  def apply(extension: String): Option[SpecFileType] = extension.toLowerCase(Locale.US) match {
-    case "yaml" | "yml" => Some(Yaml(extension))
-    case "json" => Some(Json(extension))
-    case _ => None
-  }
-}
-
-private[guardrail] class GuardrailArtifactHandler(specFileType: SpecFileType, directory: String, classifier: String) extends ArtifactHandler {
-  override def getExtension: String = specFileType.extension
-  override def getDirectory: String = directory
-  override def getClassifier: String = classifier
-  override def getPackaging: String = specFileType.toString
-  override def isIncludesDependencies: Boolean = false
-  override def getLanguage: String = specFileType.toString
-  override def isAddedToClasspath: Boolean = false
-}
 
 abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
   protected def groupId: String
