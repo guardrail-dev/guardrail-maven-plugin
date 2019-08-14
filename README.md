@@ -119,3 +119,5 @@ The plugin also interprets a single system property:
 | Property | Description |
 |:---------|:------------|
 | `guardrail.loglevel` | Changes Guardrail's log level.  Possible options are "debug", "info", "warning" (the default), "error", and "silent". |
+| `guardrail.codegen.skip` | When set to `true`, skips generating code. |
+| `guardrail.deploy.skip` | When set to `true`, skips deploying the OpenAPI spec file. |
