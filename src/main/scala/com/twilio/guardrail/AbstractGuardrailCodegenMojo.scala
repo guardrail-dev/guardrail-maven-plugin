@@ -2,12 +2,19 @@ package com.twilio.guardrail
 
 import cats.data.NonEmptyList
 import cats.implicits._
+import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
 import com.twilio.swagger.core.StructuredLogger._
 import com.twilio.swagger.core.{LogLevel, LogLevels}
 import java.io.File
+import java.util
+import org.apache.maven.artifact.Artifact
+import org.apache.maven.artifact.repository.ArtifactRepository
+import org.apache.maven.execution.MavenSession
 import org.apache.maven.plugin.{AbstractMojo, MojoExecutionException, MojoFailureException}
-import org.apache.maven.plugins.annotations.Parameter
-import org.apache.maven.project.MavenProject
+import org.apache.maven.plugins.annotations.{Component, Parameter}
+import org.apache.maven.project.{DefaultProjectBuildingRequest, MavenProject}
+import org.apache.maven.shared.transfer.artifact.DefaultArtifactCoordinate
+import org.apache.maven.shared.transfer.artifact.resolve.{ArtifactResolver, ArtifactResolverException}
 import scala.collection.JavaConverters._
 import scala.io.AnsiColor
 import scala.language.higherKinds
@@ -29,8 +36,11 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(property = "kind", defaultValue = "client")
   var kind: String = _
 
-  @Parameter(property = "specPath", required = true)
+  @Parameter(property = "specPath")
   var specPath: File = _
+
+  @Parameter(property = "specArtifact")
+  var specArtifact: GuardrailCoordinate = _
 
   @Parameter(property = "packageName")
   var packageName: String = _
@@ -47,6 +57,15 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   var project: MavenProject = _
 
+  @Parameter(defaultValue = "${project.remoteArtifactRepositories}", required = true, readonly = true)
+  var remoteRepositories: util.List[ArtifactRepository] = _
+
+  @Parameter(defaultValue = "${session}", required = true, readonly = true)
+  var session: MavenSession = _
+
+  @Component
+  var artifactResolver: ArtifactResolver = _
+
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
@@ -62,6 +81,22 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       case Test => project.addTestCompileSourceRoot(outputPath.getAbsolutePath)
     }
 
+    // The extra gymnastics is because maven will always initialize `specArtifact` to something,
+    // even if it's an invalid instance of the object.
+    val (_specPath, specDesc) = (Option(specPath), Option(specArtifact)) match {
+      case (Some(_), Some(sa)) if sa.isMaybeValid =>
+        throw new MojoExecutionException("You must specify ONLY one of 'specPath' and 'specArtifact'")
+      case (None, None) =>
+        throw new MojoExecutionException("You must specify either 'specPath' or 'specArtifact'")
+      case (None, Some(sa)) if !sa.isMaybeValid =>
+        throw new MojoExecutionException("You must specify either 'specPath' or 'specArtifact'")
+      case (Some(path), _) =>
+        (path, path.getAbsolutePath)
+      case (None, Some(sa)) =>
+        val extensions = Option(sa.getExtension).fold(SpecFileType.allExtensions)(NonEmptyList.of(_))
+        val artifact = resolveArtifact(sa, extensions)
+        (artifact.getFile, artifact.toString)
+    }
 
     try {
       val _language: String = Option(language).getOrElse({
@@ -77,7 +112,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
       val arg = Args.empty.copy(
         kind=_kind,
-        specPath=Some(specPath.getCanonicalPath()),
+        specPath=Some(_specPath.getCanonicalPath),
         packageName=Option(packageName).map(_.trim.split('.').toList),
         dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
         context=Context.empty.copy(
@@ -89,13 +124,13 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
       val logLevel = Option(System.getProperty("guardrail.loglevel")).flatMap(LogLevels.apply).getOrElse(LogLevels.Warning)
 
-      getLog.info(s"Generating ${_kind} from ${specPath.getName}")
+      getLog.info(s"Generating ${_kind} from ${specDesc}")
 
       guardrailTask(List((_language, arg)), outputPath)(logLevel)
     } catch {
       case NonFatal(e) =>
         getLog.error("Failed to generate client", e)
-        throw new MojoFailureException(s"Failed to generate client from '${specPath.getAbsolutePath}': $e", e)
+        throw new MojoFailureException(s"Failed to generate client from '${specDesc}': $e", e)
     }
   }
 
@@ -141,5 +176,26 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     print(logger.show)
 
     paths.map(_.toFile).distinct
+  }
+
+  def resolveArtifact(artifact: GuardrailCoordinate, extensions: NonEmptyList[String]): Artifact = {
+    val buildingRequest = new DefaultProjectBuildingRequest(session.getProjectBuildingRequest)
+    buildingRequest.setRemoteRepositories(this.remoteRepositories)
+
+    val coordinate = new DefaultArtifactCoordinate
+    coordinate.setGroupId(Option(artifact.getGroupId).getOrElse(project.getGroupId))
+    coordinate.setArtifactId(Option(artifact.getArtifactId).getOrElse(throw new MojoExecutionException("Missing artifactId for OpenAPI spec")))
+    coordinate.setVersion(Option(artifact.getVersion).getOrElse(throw new MojoExecutionException("Missing version for OpenAPI spec")))
+    coordinate.setExtension(extensions.head)
+    coordinate.setClassifier(Option(artifact.getClassifier).getOrElse(Constants.DEFAULT_CLASSIFIER))
+
+    try {
+      val result = this.artifactResolver.resolveArtifact(buildingRequest, coordinate)
+      Option(result.getArtifact).getOrElse(throw new ArtifactResolverException("Resolver returned null artifact", new NullPointerException))
+    } catch {
+      case e: ArtifactResolverException =>
+        NonEmptyList.fromList(extensions.tail)
+          .fold(throw new MojoExecutionException(e.getMessage, e))(resolveArtifact(artifact, _))
+    }
   }
 }
