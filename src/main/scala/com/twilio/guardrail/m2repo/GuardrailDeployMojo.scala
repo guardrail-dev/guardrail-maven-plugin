@@ -6,15 +6,15 @@ import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter}
 // both the install and deploy stages.
 @Mojo(name = "deploy-openapi-spec", defaultPhase = LifecyclePhase.PACKAGE)
 class GuardrailDeployMojo extends AbstractGuardrailDeployMojo {
-  @Parameter(name = "groupId", defaultValue = "${project.groupId}")
+  @Parameter(property = "groupId", defaultValue = "${project.groupId}")
   var groupId: String = _
 
-  @Parameter(name = "artifactId", defaultValue = "${project.artifactId}")
+  @Parameter(property = "artifactId", defaultValue = "${project.artifactId}")
   var artifactId: String = _
 
-  @Parameter(name = "type", defaultValue = Constants.DEFAULT_TYPE)
+  @Parameter(property = "type", defaultValue = Constants.DEFAULT_TYPE)
   var `type`: String = _
 
-  @Parameter(name = "classifier", defaultValue = Constants.DEFAULT_CLASSIFIER)
+  @Parameter(property = "classifier", defaultValue = Constants.DEFAULT_CLASSIFIER)
   var classifier: String = _
 }
