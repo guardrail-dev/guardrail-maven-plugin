@@ -54,6 +54,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(property = "framework", defaultValue = "akka-http")
   var framework: String = _
 
+  @Parameter(property = "guardrail.codegen.skip", defaultValue = "false")
+  var skip: Boolean = _
+
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   var project: MavenProject = _
 
@@ -79,6 +82,11 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     phase match {
       case Main => project.addCompileSourceRoot(outputPath.getAbsolutePath)
       case Test => project.addTestCompileSourceRoot(outputPath.getAbsolutePath)
+    }
+
+    if (skip) {
+      getLog.info("Skipping guardrail codegen run")
+      return
     }
 
     // The extra gymnastics is because maven will always initialize `specArtifact` to something,
