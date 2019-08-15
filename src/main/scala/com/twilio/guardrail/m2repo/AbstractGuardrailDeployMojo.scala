@@ -12,10 +12,10 @@ abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
   protected def `type`: String
   protected def classifier: String
 
-  @Parameter(name = "specPath", required = true)
+  @Parameter(property = "specPath", required = true)
   var specPath: File = _
 
-  @Parameter(name = "guardrail.deploy.skip", defaultValue = "false")
+  @Parameter(property = "guardrail.deploy.skip", defaultValue = "false")
   var skip: Boolean = _
 
   @Parameter(defaultValue = "${project}", required = true, readonly = false)
