@@ -48,11 +48,12 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(property = "dtoPackage")
   var dtoPackage: String = _
 
+  @Parameter(property = "framework", defaultValue = "akka-http")
+  var framework: String = _
+
   @Parameter(property = "tracing", defaultValue = "false")
   var tracing: Boolean = _
 
-  @Parameter(property = "framework", defaultValue = "akka-http")
-  var framework: String = _
 
   @Parameter(property = "guardrail.codegen.skip", defaultValue = "false")
   var skip: Boolean = _
