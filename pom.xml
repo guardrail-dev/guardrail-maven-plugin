@@ -8,7 +8,7 @@
 
   <name>Guardrail Maven Plugin</name>
   <description>
-    Principled code generation for Scala services from OpenAPI specifications
+    Principled code generation for JVM services from OpenAPI specifications
   </description>
 
   <url>https://github.com/twilio/guardrail-maven-plugin</url>
