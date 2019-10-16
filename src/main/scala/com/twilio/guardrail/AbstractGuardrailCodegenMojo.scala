@@ -54,6 +54,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(property = "tracing", defaultValue = "false")
   var tracing: Boolean = _
 
+  @Parameter(required = false, readonly = false)
+  var modules: java.util.List[_] = _
 
   @Parameter(property = "guardrail.codegen.skip", defaultValue = "false")
   var skip: Boolean = _
@@ -126,7 +128,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
         context=Context.empty.copy(
           framework=Option(framework),
-          tracing=Option(tracing).getOrElse(Context.empty.tracing)
+          tracing=Option(tracing).getOrElse(Context.empty.tracing),
+          modules=Option(modules).fold(Context.empty.modules)(_.asScala.toList.map(_.toString))
         ),
         imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
       )
