@@ -3,12 +3,12 @@
 
   <groupId>com.twilio</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
-  <version>0.53.2-SNAPSHOT</version>
+  <version>0.54.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
   <description>
-    Principled code generation for Scala services from OpenAPI specifications
+    Principled code generation for JVM services from OpenAPI specifications
   </description>
 
   <url>https://github.com/twilio/guardrail-maven-plugin</url>
@@ -49,7 +49,7 @@
     <plexus-utils.version>3.2.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.8</scala.version>
-    <guardrail.version>0.53.1</guardrail.version>
+    <guardrail.version>0.54.0</guardrail.version>
   </properties>
 
   <profiles>

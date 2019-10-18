@@ -48,11 +48,14 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(property = "dtoPackage")
   var dtoPackage: String = _
 
+  @Parameter(property = "framework", defaultValue = "akka-http")
+  var framework: String = _
+
   @Parameter(property = "tracing", defaultValue = "false")
   var tracing: Boolean = _
 
-  @Parameter(property = "framework", defaultValue = "akka-http")
-  var framework: String = _
+  @Parameter(required = false, readonly = false)
+  var modules: java.util.List[_] = _
 
   @Parameter(property = "guardrail.codegen.skip", defaultValue = "false")
   var skip: Boolean = _
@@ -125,7 +128,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
         context=Context.empty.copy(
           framework=Option(framework),
-          tracing=Option(tracing).getOrElse(Context.empty.tracing)
+          tracing=Option(tracing).getOrElse(Context.empty.tracing),
+          modules=Option(modules).fold(Context.empty.modules)(_.asScala.toList.map(_.toString))
         ),
         imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
       )
@@ -177,6 +181,15 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             throw new CodegenFailedException()
           case UserError(message) =>
             getLog.error(s"Error: ${message}")
+            throw new CodegenFailedException()
+          case MissingModule(section) =>
+            println(s"Error: Missing module ${section}")
+            throw new CodegenFailedException()
+          case ModuleConflict(section) =>
+            println(s"Error: Too many modules specified for ${section}")
+            throw new CodegenFailedException()
+          case UnconsumedModules(modules) =>
+            println(s"Error: Unconsumed modules: ${modules.mkString(", ")}")
             throw new CodegenFailedException()
         }, identity)
         .runEmpty
