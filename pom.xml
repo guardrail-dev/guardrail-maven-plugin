@@ -3,7 +3,7 @@
 
   <groupId>com.twilio</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
-  <version>0.54.0</version>
+  <version>0.54.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
