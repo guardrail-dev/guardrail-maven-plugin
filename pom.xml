@@ -27,8 +27,8 @@
   </organization>
 
   <scm>
-    <url>https://github.com/twilio/guardrail</url>
-    <connection>scm:git@github.com:twilio/guardrail.git</connection>
+    <url>https://github.com/twilio/guardrail-maven-plugin</url>
+    <connection>scm:git@github.com:twilio/guardrail-maven-plugin.git</connection>
   </scm>
 
   <developers>
