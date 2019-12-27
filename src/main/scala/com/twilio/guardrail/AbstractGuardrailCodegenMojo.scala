@@ -153,7 +153,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
       acc.updated(language, acc.get(language).fold(NonEmptyList.one(prepped))(_ :+ prepped))
     }
 
-    val (logger, paths) =
+    val /*(logger,*/ paths/*)*/ =
       cli.guardrailRunner
         .apply(preppedTasks)
         .fold[List[java.nio.file.Path]]({
@@ -192,9 +192,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             println(s"Error: Unconsumed modules: ${modules.mkString(", ")}")
             throw new CodegenFailedException()
         }, identity)
-        .runEmpty
+        //.runEmpty
 
-    print(logger.show)
+    //print(logger.show)
 
     paths.map(_.toFile).distinct
   }
