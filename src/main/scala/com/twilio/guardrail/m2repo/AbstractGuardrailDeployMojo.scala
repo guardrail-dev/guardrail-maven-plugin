@@ -5,6 +5,7 @@ import org.apache.maven.artifact.DefaultArtifact
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.project.MavenProject
+import org.apache.maven.artifact.versioning.VersionRange
 
 abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
   protected def groupId: String
@@ -35,7 +36,7 @@ abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
         "/" + groupId.replaceAllLiterally(".", "/") + artifactId,
         classifier
       )
-      val artifact = new DefaultArtifact(groupId, artifactId, project.getVersion, Constants.SCOPE, `type`, classifier, handler)
+      val artifact = new DefaultArtifact(groupId, artifactId, VersionRange.createFromVersionSpec(project.getVersion), Constants.SCOPE, `type`, classifier, handler)
       artifact.setFile(specPath)
       artifact.setRelease(!project.getVersion.endsWith("-SNAPSHOT"))
       project.addAttachedArtifact(artifact)
