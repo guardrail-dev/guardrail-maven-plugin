@@ -75,6 +75,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
   @Parameter(required = false, readonly = false)
   var customImports: java.util.List[_] = _
 
+  @Parameter(property = "customExtraction")
+  var customExtraction: Boolean = _
+
   protected def cli: CLICommon
 
   override def execute(): Unit = {
@@ -127,6 +130,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         packageName=Option(packageName).map(_.trim.split('.').toList),
         dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
         context=Context.empty.copy(
+          customExtraction=Option(customExtraction).getOrElse(Context.empty.customExtraction),
           framework=Option(framework),
           tracing=Option(tracing).getOrElse(Context.empty.tracing),
           modules=Option(modules).fold(Context.empty.modules)(_.asScala.toList.map(_.toString))
