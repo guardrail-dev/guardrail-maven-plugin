@@ -186,14 +186,14 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
           case UserError(message) =>
             getLog.error(s"Error: ${message}")
             throw new CodegenFailedException()
-          case MissingModule(section) =>
-            println(s"Error: Missing module ${section}")
+          case MissingModule(section, choices) =>
+            getLog.error(s"Error: Missing module ${section}. Options are: ${choices.mkString(",")}")
             throw new CodegenFailedException()
           case ModuleConflict(section) =>
-            println(s"Error: Too many modules specified for ${section}")
+            getLog.error(s"Error: Too many modules specified for ${section}")
             throw new CodegenFailedException()
           case UnconsumedModules(modules) =>
-            println(s"Error: Unconsumed modules: ${modules.mkString(", ")}")
+            getLog.error(s"Error: Unconsumed modules: ${modules.mkString(", ")}")
             throw new CodegenFailedException()
         }, identity)
         //.runEmpty

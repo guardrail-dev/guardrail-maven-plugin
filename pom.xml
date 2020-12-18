@@ -3,7 +3,7 @@
 
   <groupId>com.twilio</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
-  <version>0.61.0</version>
+  <version>0.62.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
@@ -38,6 +38,12 @@
       <email>blast@hardchee.se</email>
       <url>http://hardchee.se/</url>
     </developer>
+    <developer>
+      <id>kelnos</id>
+      <name>Brian Tarricone</name>
+      <email>brian@tarricone.org</email>
+      <url>https://www.spurint.org/</url>
+    </developer>
   </developers>
 
   <properties>
@@ -49,7 +55,7 @@
     <plexus-utils.version>3.3.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.12</scala.version>
-    <guardrail.version>0.61.0</guardrail.version>
+    <guardrail.version>0.62.0</guardrail.version>
   </properties>
 
   <profiles>
