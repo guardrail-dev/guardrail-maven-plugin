@@ -177,7 +177,7 @@
           <compilerPlugins>
             <compilerPlugin>
               <groupId>org.spire-math</groupId>
-              <artifactId>kind-projector_2.12</artifactId>
+              <artifactId>kind-projector_${scala.binary.version}</artifactId>
               <version>0.9.4</version>
             </compilerPlugin>
           </compilerPlugins>
