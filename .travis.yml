@@ -33,7 +33,7 @@ before_install:
     gpg --fast-import travis/local.secring.asc;
   fi
 after_success:
-- if [ $TRAVIS_PULL_REQUEST = 'false' ] && [[ "$TRAVIS_TAG" = v* ]]; then
+- if [ $TRAVIS_PULL_REQUEST = 'false' ] && [[ "$TRAVIS_TAG" = v* ]] && ! grep -- -SNAPSHOT pom.xml; then
     mvn clean deploy -Possrh --settings settings.xml;
     mvn clean deploy -Pbintray --settings settings.xml;
   fi
