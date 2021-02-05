@@ -24,7 +24,7 @@ jobs:
     - name: Build with Maven
       env:
         PGP_KEYID: ${{ secrets.PGP_KEYID }}
-        PGP_PASSPHRASE: ${{ secrets.PGP_SECRET }}
+        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
