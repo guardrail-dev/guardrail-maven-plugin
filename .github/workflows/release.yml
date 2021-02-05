@@ -15,9 +15,18 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 8
+        gpg-private-key: ${{ secrets.PGP_SECRET }}
+        gpg-passphrase: PGP_PASSPHRASE
+        server-username: SONATYPE_USERNAME
+        server-password: SONATYPE_PASSWORD
     - name: print Java version
       run: java -version
     - name: Build with Maven
+      env:
+        PGP_KEYID: ${{ secrets.PGP_KEYID }}
+        PGP_PASSPHRASE: ${{ secrets.PGP_SECRET }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
         if [[ "$GITHUB_REF" = refs/heads/* ]]; then
             export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/heads/};
@@ -27,6 +36,4 @@ jobs:
             export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/};
             VERSIONING_GIT_BRANCH=${VERSIONING_GIT_BRANCH%/merge};
         fi
-        mvn clean deploy -Possrh --settings settings.xml
-
-
+        mvn clean deploy -Possrh
