@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types:
+      - released
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+        gpg-private-key: ${{ secrets.PGP_SECRET }}
+        gpg-passphrase: PGP_PASSPHRASE
+        server-username: SONATYPE_USERNAME
+        server-password: SONATYPE_PASSWORD
+    - name: print Java version
+      run: java -version
+    - name: Build with Maven
+      env:
+        PGP_KEYID: ${{ secrets.PGP_KEYID }}
+        PGP_PASSPHRASE: ${{ secrets.PGP_SECRET }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      run: |
+        if [[ "$GITHUB_REF" = refs/heads/* ]]; then
+            export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/heads/};
+        elif [[ "$GITHUB_REF" = refs/tags/* ]]; then
+            export VERSIONING_GIT_TAG=${GITHUB_REF#refs/tags/};
+        elif [[ "$GITHUB_REF" = refs/pull/*/merge ]]; then
+            export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/};
+            VERSIONING_GIT_BRANCH=${VERSIONING_GIT_BRANCH%/merge};
+        fi
+        mvn clean deploy -Possrh
