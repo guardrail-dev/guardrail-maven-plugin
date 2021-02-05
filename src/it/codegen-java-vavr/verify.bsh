@@ -1,6 +1,6 @@
 import java.io.*;
 
-File file = new File( basedir, "target/codegen-java-vavr-0.0.1-SNAPSHOT.jar" );
+File file = new File( basedir, "target/codegen-java-vavr-" + projectVersion + ".jar" );
 if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated JAR: " + file );
