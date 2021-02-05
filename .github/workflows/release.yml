@@ -36,4 +36,4 @@ jobs:
             export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/};
             VERSIONING_GIT_BRANCH=${VERSIONING_GIT_BRANCH%/merge};
         fi
-        mvn clean deploy -Possrh
+        mvn -B --no-transfer-progress clean deploy -Possrh
