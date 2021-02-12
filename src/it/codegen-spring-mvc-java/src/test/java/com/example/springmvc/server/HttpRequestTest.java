@@ -3,7 +3,6 @@ package com.example.springmvc.server;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
@@ -13,9 +12,6 @@ import static org.hamcrest.Matchers.equalTo;
 public class HttpRequestTest {
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Test
     public void userEndpointReturnsStatus200() throws Exception {
