@@ -54,7 +54,7 @@
     <maven-project.version>3.0-alpha-2</maven-project.version>
     <plexus-utils.version>3.3.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
-    <scala.version>2.12.12</scala.version>
+    <scala.version>2.13.5</scala.version>
     <guardrail.version>0.62.2</guardrail.version>
   </properties>
 
