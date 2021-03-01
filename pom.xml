@@ -261,6 +261,7 @@
             <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
             <settingsFile>src/it/settings.xml</settingsFile>
             <mavenOpts>-Djava.io.tmpdir=${project.build.directory}</mavenOpts>
+            <streamLogsOnFailures>true</streamLogsOnFailures>
             <properties>
               <guardrail.plugin.version>${project.version}</guardrail.plugin.version>
               <maven.compiler.source>1.8</maven.compiler.source>
