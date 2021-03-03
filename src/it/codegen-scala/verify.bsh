@@ -1,6 +1,9 @@
 import java.io.*;
  
-File file = new File( basedir, "target/codegen-scala-" + projectVersion + ".jar" );
+String name = "codegen-scala";
+ 
+File target = new File(basedir, "target");
+File file = new File(target, name + "-" + projectVersion + ".jar");
 if ( !file.isFile() )
 {
     throw new FileNotFoundException( "Could not find generated JAR: " + file );
