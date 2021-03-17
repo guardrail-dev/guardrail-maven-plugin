@@ -6,5 +6,9 @@ File target = new File(basedir, "target");
 File file = new File(target, name + "-" + projectVersion + ".jar");
 if ( !file.isFile() )
 {
-    throw new FileNotFoundException( "Could not find generated JAR: " + file );
+    String res = "";
+    for (File f : target.listFiles()) {
+        res += " " + f.toString();
+    }
+    throw new FileNotFoundException( "Could not find generated JAR: " + file + " " + res);
 }
