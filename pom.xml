@@ -3,7 +3,7 @@
 
   <groupId>com.twilio</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
-  <version>0.0.0</version>
+  <version>0.64.2</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
@@ -55,7 +55,7 @@
     <plexus-utils.version>3.3.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.14</scala.version>
-    <guardrail.version>0.64.1</guardrail.version>
+    <guardrail.version>0.64.2</guardrail.version>
   </properties>
 
   <profiles>
