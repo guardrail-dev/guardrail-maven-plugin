@@ -2,7 +2,7 @@
 #   Guess the next version of the sbt-guardrail plugin based on the current library dependency
 #   Ideally, this'll let actions automatically tag and release.
 #
-#   Strategy is to pull the com.twilio %% guardrail % <VERSION>,
+#   Strategy is to pull the dev.guardrail %% guardrail % <VERSION>,
 #   ... check to see if a tag with that version exists,
 #   ... if so, exit 1
 #   ... if not, emit that version to stdout

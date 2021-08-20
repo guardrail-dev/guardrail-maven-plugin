@@ -1,4 +1,4 @@
-package com.twilio.guardrail
+package dev.guardrail
 
 import java.io.File
 import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter}

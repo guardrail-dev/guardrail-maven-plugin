@@ -1,7 +1,7 @@
 <project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.twilio</groupId>
+  <groupId>dev.guardrail</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
   <version>0.64.2</version>
   <packaging>maven-plugin</packaging>
@@ -11,7 +11,7 @@
     Principled code generation for JVM services from OpenAPI specifications
   </description>
 
-  <url>https://github.com/twilio/guardrail-maven-plugin</url>
+  <url>https://github.com/guardrail-dev/guardrail-maven-plugin</url>
 
   <licenses>
     <license>
@@ -22,13 +22,13 @@
   </licenses>
 
   <organization>
-    <name>com.twilio</name>
-    <url>https://github.com/twilio/guardrail</url>
+    <name>dev.guardrail</name>
+    <url>https://github.com/guardrail-dev/guardrail</url>
   </organization>
 
   <scm>
-    <url>https://github.com/twilio/guardrail-maven-plugin</url>
-    <connection>scm:git@github.com:twilio/guardrail-maven-plugin.git</connection>
+    <url>https://github.com/guardrail-dev/guardrail-maven-plugin</url>
+    <connection>scm:git@github.com:guardrail-dev/guardrail-maven-plugin.git</connection>
   </scm>
 
   <developers>
@@ -55,32 +55,10 @@
     <plexus-utils.version>3.3.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.14</scala.version>
-    <guardrail.version>0.64.5</guardrail.version>
+    <guardrail.version>0.64.4</guardrail.version>
   </properties>
 
   <profiles>
-    <profile>
-      <id>bintray</id>
-      <distributionManagement>
-        <repository>
-          <id>bintray-twilio-releases</id>
-          <name>twilio-releases</name>
-          <url>https://api.bintray.com/maven/twilio/releases/guardrail-maven-plugin/;publish=1</url>
-        </repository>
-      </distributionManagement>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-      <properties>
-        <gpg.executable>gpg</gpg.executable>
-        <gpg.keyname>${env.PGP_KEYID}</gpg.keyname>
-      </properties>
-    </profile>
     <profile>
       <id>ossrh</id>
       <distributionManagement>
@@ -153,7 +131,7 @@
       <version>${plexus-utils.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.twilio</groupId>
+      <groupId>dev.guardrail</groupId>
       <artifactId>guardrail_${scala.binary.version}</artifactId>
       <version>${guardrail.version}</version>
     </dependency>

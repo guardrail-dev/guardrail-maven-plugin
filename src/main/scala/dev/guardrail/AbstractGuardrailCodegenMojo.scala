@@ -1,10 +1,10 @@
-package com.twilio.guardrail
+package dev.guardrail
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
-import com.twilio.guardrail.core.StructuredLogger._
-import com.twilio.guardrail.core.{LogLevel, LogLevels}
+import dev.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
+import dev.guardrail.core.StructuredLogger._
+import dev.guardrail.core.{LogLevel, LogLevels}
 import java.io.File
 import java.util
 import org.apache.maven.artifact.Artifact

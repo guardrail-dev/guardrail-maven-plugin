@@ -1,4 +1,4 @@
-package com.twilio.guardrail.m2repo
+package dev.guardrail.m2repo
 
 import cats.data.NonEmptyList
 import java.util.Locale
