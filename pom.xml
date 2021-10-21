@@ -6,7 +6,7 @@
   <version>0.66.0</version>
   <packaging>maven-plugin</packaging>
 
-  <name>Guardrail Maven Plugin</name>
+  <name>guardrail-maven-plugin</name>
   <description>
     Principled code generation for JVM services from OpenAPI specifications
   </description>
