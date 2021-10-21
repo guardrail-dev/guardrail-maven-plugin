@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.twilio.guardrail.example</groupId>
+  <groupId>dev.guardrail.example</groupId>
   <artifactId>codegen-java-vavr</artifactId>
   <packaging>jar</packaging>
   <name>codegen-java-vavr</name>
@@ -140,7 +140,7 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>com.twilio</groupId>
+        <groupId>dev.guardrail</groupId>
         <artifactId>guardrail-maven-plugin_2.12</artifactId>
         <version>${guardrail.plugin.version}</version>
         <executions>
