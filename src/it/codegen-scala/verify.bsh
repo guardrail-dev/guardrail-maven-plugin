@@ -3,12 +3,22 @@ import java.io.*;
 String name = "codegen-scala";
  
 File target = new File(basedir, "target");
+
 File file = new File(target, name + "-" + projectVersion + ".jar");
-if ( !file.isFile() )
+File fileSnapshot = new File(target, name + "-" + projectVersion + "-SNAPSHOT.jar");
+File shaFile = new File(target, name + "-" + shortRef + ".jar");
+File shaFileSnapshot = new File(target, name + "-" + shortRef + "-SNAPSHOT.jar");
+
+// Lots of options
+if ( !file.isFile() && !fileSnapshot.isFile() && !shaFile.isFile() && !shaFileSnapshot.isFile() )
 {
     String res = "";
     for (File f : target.listFiles()) {
         res += " " + f.toString();
     }
-    throw new FileNotFoundException( "Could not find generated JAR: " + file + " " + res);
+    throw new FileNotFoundException(
+        "Could not find generated JAR, tested: " +
+        file + ", " + fileSnapshot + ", " +
+        shaFile + ", " + shaFileSnapshot + " " +
+        res);
 }
