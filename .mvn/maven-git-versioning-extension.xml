@@ -1,17 +1,22 @@
-<gitVersioning>
-    <branch>
-        <pattern>master</pattern>
-        <versionFormat>${version}</versionFormat>
-    </branch>
-    <branch>
-         <pattern><![CDATA[feature/(?<feature>.+)]]></pattern>
-         <versionFormat>${feature}-SNAPSHOT</versionFormat>
-     </branch>
-    <tag>
-        <pattern><![CDATA[v(?<tagVersion>[0-9].*)]]></pattern>
-        <versionFormat>${tagVersion}</versionFormat>
-    </tag>
-    <commit>
-        <versionFormat>${commit.short}-SNAPSHOT</versionFormat>
-    </commit>
-</gitVersioning>
+<configuration xmlns="https://github.com/qoomon/maven-git-versioning-extension"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-7.0.0.xsd">
+
+    <refs>
+        <ref type="branch">
+            <pattern>.+</pattern>
+            <version>${commit.short}-SNAPSHOT</version>
+        </ref>
+
+        <ref type="tag">
+            <pattern><![CDATA[v(?<version>.*)]]></pattern>
+            <version>${ref.version}</version>
+        </ref>
+    </refs>
+
+    <!-- optional fallback configuration in case of no matching ref configuration-->
+    <rev>
+        <version>${commit.short}-SNAPSHOT</version>
+    </rev>
+
+</configuration>
