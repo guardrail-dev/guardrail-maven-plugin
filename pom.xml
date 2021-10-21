@@ -1,7 +1,7 @@
 <project xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.twilio</groupId>
+  <groupId>dev.guardrail</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
   <version>0.65.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
@@ -10,8 +10,7 @@
   <description>
     Principled code generation for JVM services from OpenAPI specifications
   </description>
-
-  <url>https://github.com/twilio/guardrail-maven-plugin</url>
+  <url>https://github.com/guardrail-dev/guardrail-maven-plugin</url>
 
   <licenses>
     <license>
@@ -22,13 +21,13 @@
   </licenses>
 
   <organization>
-    <name>com.twilio</name>
-    <url>https://github.com/twilio/guardrail</url>
+    <name>dev.guardrail</name>
+    <url>https://github.com/guardrail-dev/guardrail</url>
   </organization>
 
   <scm>
-    <url>https://github.com/twilio/guardrail-maven-plugin</url>
-    <connection>scm:git@github.com:twilio/guardrail-maven-plugin.git</connection>
+    <url>https://github.com/guardrail-dev/guardrail-maven-plugin</url>
+    <connection>scm:git@github.com:guardrail-dev/guardrail-maven-plugin.git</connection>
   </scm>
 
   <developers>
