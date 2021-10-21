@@ -1,10 +1,7 @@
-package com.twilio.guardrail
+package dev.guardrail
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
-import com.twilio.guardrail.core.StructuredLogger._
-import com.twilio.guardrail.core.{LogLevel, LogLevels}
 import java.io.File
 import java.util
 import org.apache.maven.artifact.Artifact
@@ -20,13 +17,18 @@ import scala.io.AnsiColor
 import scala.language.higherKinds
 import scala.util.control.NonFatal
 
+import dev.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
+import dev.guardrail.core.StructuredLogger._
+import dev.guardrail.core.{LogLevel, LogLevels}
+import dev.guardrail.runner.GuardrailRunner
+
 class CodegenFailedException extends Exception
 
 sealed abstract class Phase(val root: String)
 object Main extends Phase("main")
 object Test extends Phase("test")
 
-abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
+abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo with GuardrailRunner {
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
 
@@ -77,8 +79,6 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
   @Parameter(property = "customExtraction")
   var customExtraction: Boolean = _
-
-  protected def cli: CLICommon
 
   override def execute(): Unit = {
     if (!outputPath.exists()) {
@@ -158,11 +158,20 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     }
 
     val /*(logger,*/ paths/*)*/ =
-      cli.guardrailRunner
+      guardrailRunner
         .apply(preppedTasks)
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>
             getLog.error(s"Missing argument: ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
+            throw new CodegenFailedException()
+          case MissingDependency(name) =>
+            getLog.error(s"""${AnsiColor.RED}Missing dependency:${AnsiColor.RESET}
+            |${AnsiColor.BOLD}<dependency>
+            |  <groupId>dev.guardrail</groupId>
+            |  <artifactId>${name}_2.12</artifactId>
+            |  <version>Check latest version!</version>
+            |</dependency>${AnsiColor.RESET}
+            |""".stripMargin)
             throw new CodegenFailedException()
           case NoArgsSpecified =>
             List.empty
