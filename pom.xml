@@ -60,28 +60,6 @@
 
   <profiles>
     <profile>
-      <id>bintray</id>
-      <distributionManagement>
-        <repository>
-          <id>bintray-twilio-releases</id>
-          <name>twilio-releases</name>
-          <url>https://api.bintray.com/maven/twilio/releases/guardrail-maven-plugin/;publish=1</url>
-        </repository>
-      </distributionManagement>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-      <properties>
-        <gpg.executable>gpg</gpg.executable>
-        <gpg.keyname>${env.PGP_KEYID}</gpg.keyname>
-      </properties>
-    </profile>
-    <profile>
       <id>ossrh</id>
       <distributionManagement>
         <repository>
