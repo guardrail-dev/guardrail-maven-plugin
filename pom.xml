@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dev.guardrail</groupId>
-  <artifactId>guardrail-maven-plugin_2.12</artifactId>
+  <artifactId>guardrail-maven-plugin</artifactId>
   <version>0.65.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 

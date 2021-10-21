@@ -15,7 +15,7 @@ Add to your `pom.xml`:
     ...
     <plugin>
       <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-maven-plugin_2.12</artifactId>
+      <artifactId>guardrail-maven-plugin</artifactId>
       <version>Please use the latest available release!</version>
       <executions>
         <!-- This execution generates an API client from an OpenAPI spec file -->
