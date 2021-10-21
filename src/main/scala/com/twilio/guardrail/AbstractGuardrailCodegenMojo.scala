@@ -2,9 +2,6 @@ package com.twilio.guardrail
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
-import com.twilio.guardrail.core.StructuredLogger._
-import com.twilio.guardrail.core.{LogLevel, LogLevels}
 import java.io.File
 import java.util
 import org.apache.maven.artifact.Artifact
@@ -19,6 +16,12 @@ import scala.collection.JavaConverters._
 import scala.io.AnsiColor
 import scala.language.higherKinds
 import scala.util.control.NonFatal
+
+import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
+import dev.guardrail._
+import dev.guardrail.cli.CLICommon
+import dev.guardrail.core.StructuredLogger._
+import dev.guardrail.core.{LogLevel, LogLevels}
 
 class CodegenFailedException extends Exception
 
@@ -163,6 +166,15 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>
             getLog.error(s"Missing argument: ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
+            throw new CodegenFailedException()
+          case MissingDependency(name) =>
+            getLog.error(s"""${AnsiColor.RED}Missing dependency:${AnsiColor.RESET}
+            |${AnsiColor.BOLD}<dependency>
+            |  <groupId>dev.guardrail</groupId>
+            |  <artifactId>${name}_2.12</artifactId>
+            |  <version>Check latest version!</version>
+            |</dependency>${AnsiColor.RESET}
+            |""".stripMargin)
             throw new CodegenFailedException()
           case NoArgsSpecified =>
             List.empty

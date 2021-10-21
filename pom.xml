@@ -3,7 +3,7 @@
 
   <groupId>com.twilio</groupId>
   <artifactId>guardrail-maven-plugin_2.12</artifactId>
-  <version>0.64.2</version>
+  <version>0.65.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Guardrail Maven Plugin</name>
@@ -55,7 +55,6 @@
     <plexus-utils.version>3.3.0</plexus-utils.version>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.15</scala.version>
-    <guardrail.version>0.64.5</guardrail.version>
   </properties>
 
   <profiles>
@@ -130,10 +129,68 @@
       <artifactId>plexus-utils</artifactId>
       <version>${plexus-utils.version}</version>
     </dependency>
+    <!-- guardrail modularization means versioning these all separately now. dependabot and scala-steward should do a good job. -->
+    <!-- Additionally, we will likely only want to depend on guardrail and guardrail-core,
+         letting the user specify which modules they want, to cut down on version churn -->
     <dependency>
-      <groupId>com.twilio</groupId>
-      <artifactId>guardrail_${scala.binary.version}</artifactId>
-      <version>${guardrail.version}</version>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail_2.12</artifactId>
+      <version>0.65.5</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-cli_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-core_2.12</artifactId>
+      <version>0.65.4</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-async-http_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-dropwizard_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-spring-mvc_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-support_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-akka-http_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-dropwizard_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-endpoints_2.12</artifactId>
+      <version>0.65.2</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-http4s_2.12</artifactId>
+      <version>0.65.4</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-support_2.12</artifactId>
+      <version>0.65.2</version>
     </dependency>
   </dependencies>
 
