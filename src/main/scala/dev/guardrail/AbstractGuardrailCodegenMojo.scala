@@ -1,4 +1,4 @@
-package com.twilio.guardrail
+package dev.guardrail
 
 import cats.data.NonEmptyList
 import cats.implicits._
@@ -17,11 +17,10 @@ import scala.io.AnsiColor
 import scala.language.higherKinds
 import scala.util.control.NonFatal
 
-import com.twilio.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
-import dev.guardrail._
-import dev.guardrail.cli.CLICommon
+import dev.guardrail.m2repo.{Constants, GuardrailCoordinate, SpecFileType}
 import dev.guardrail.core.StructuredLogger._
 import dev.guardrail.core.{LogLevel, LogLevels}
+import dev.guardrail.runner.GuardrailRunner
 
 class CodegenFailedException extends Exception
 
@@ -29,7 +28,7 @@ sealed abstract class Phase(val root: String)
 object Main extends Phase("main")
 object Test extends Phase("test")
 
-abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
+abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo with GuardrailRunner {
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
 
@@ -80,8 +79,6 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
   @Parameter(property = "customExtraction")
   var customExtraction: Boolean = _
-
-  protected def cli: CLICommon
 
   override def execute(): Unit = {
     if (!outputPath.exists()) {
@@ -161,7 +158,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
     }
 
     val /*(logger,*/ paths/*)*/ =
-      cli.guardrailRunner
+      guardrailRunner
         .apply(preppedTasks)
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>

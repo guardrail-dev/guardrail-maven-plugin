@@ -1,4 +1,4 @@
-package com.twilio.guardrail.m2repo
+package dev.guardrail.m2repo
 
 import java.io.File
 import org.apache.maven.artifact.DefaultArtifact
