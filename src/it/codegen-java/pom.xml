@@ -116,7 +116,7 @@
       </plugin>
       <plugin>
         <groupId>dev.guardrail</groupId>
-        <artifactId>guardrail-maven-plugin_2.12</artifactId>
+        <artifactId>guardrail-maven-plugin</artifactId>
         <version>${guardrail.plugin.version}</version>
         <executions>
           <execution>
