@@ -10,8 +10,15 @@
   <description>
     Principled code generation for JVM services from OpenAPI specifications
   </description>
-
   <url>https://github.com/twilio/guardrail-maven-plugin</url>
+
+  <!-- New groupId, new artifactId -->
+  <distributionManagement>
+    <relocation>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-maven-plugin</artifactId>
+    </relocation>
+  </distributionManagement>
 
   <licenses>
     <license>
