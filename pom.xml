@@ -134,62 +134,42 @@
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail_2.12</artifactId>
-      <version>0.66.0</version>
+      <version>0.68.1</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-cli_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-core_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-async-http_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-dropwizard_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-spring-mvc_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-support_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-akka-http_2.12</artifactId>
       <version>0.67.0</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-dropwizard_2.12</artifactId>
+      <version>0.67.1</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-java-spring-mvc_2.12</artifactId>
+      <version>0.67.1</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
+      <artifactId>guardrail-scala-akka-http_2.12</artifactId>
+      <version>0.69.0</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-scala-dropwizard_2.12</artifactId>
-      <version>0.66.0</version>
+      <version>0.67.1</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-scala-endpoints_2.12</artifactId>
-      <version>0.66.0</version>
+      <version>0.67.1</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-scala-http4s_2.12</artifactId>
-      <version>0.66.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-support_2.12</artifactId>
-      <version>0.66.0</version>
+      <version>0.68.0</version>
     </dependency>
   </dependencies>
 
