@@ -48,7 +48,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-artifact-transfer.version>0.13.1</maven-artifact-transfer.version>
-    <maven-plugin-annotations.version>3.6.1</maven-plugin-annotations.version>
+    <maven-plugin-annotations.version>3.6.2</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.8.3</maven-plugin-api.version>
     <maven-project.version>3.0-alpha-2</maven-project.version>
     <plexus-utils.version>3.3.0</plexus-utils.version>
@@ -178,7 +178,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>4.5.4</version>
+        <version>4.5.6</version>
         <configuration>
           <recompileMode>incremental</recompileMode>
           <args>
@@ -233,7 +233,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.2</version>
         <configuration>
           <goalPrefix>guardrail</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
