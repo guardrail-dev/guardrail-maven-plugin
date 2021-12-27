@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11', '13', '14', '15', '16' ]
+        java: [ '8', '11', '17' ]
     steps:
     - uses: actions/checkout@v2.4.0
     - name: Set up JDK
@@ -23,7 +23,7 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: print Java version
       run: java -version
-    - uses: actions/cache@v2.1.6
+    - uses: actions/cache@v2.1.7
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
