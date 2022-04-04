@@ -305,7 +305,7 @@
           <artifactId>maven-invoker-plugin</artifactId>
           <version>3.2.2</version>
           <configuration>
-            <parallelThreads>4</parallelThreads>
+            <parallelThreads>1</parallelThreads>
             <projectsDirectory>${project.basedir}/src/it</projectsDirectory>
             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
             <preBuildHookScript>setup</preBuildHookScript>
