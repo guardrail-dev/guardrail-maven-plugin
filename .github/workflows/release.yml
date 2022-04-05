@@ -25,6 +25,13 @@ jobs:
         server-password: SONATYPE_PASSWORD
     - name: print Java version
       run: java -version
+    - name: print gpg version
+      run: |
+        echo START; \
+        gpg --list-keys; \
+        gpg --list-secret-keys; \
+        cat /home/runner/.m2/settings.xml; \
+        echo END
     - name: Build with Maven
       env:
         PGP_KEYID: ${{ secrets.PGP_KEYID }}
