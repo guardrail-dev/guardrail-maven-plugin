@@ -57,7 +57,7 @@
     <maven-settings.version>3.0</maven-settings.version>
     <plexus-utils.version>3.3.1</plexus-utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.compat.version>2.12</scala.compat.version>
     <scala.version>2.12.15</scala.version>
   </properties>
 
@@ -234,7 +234,7 @@
           <compilerPlugins>
             <compilerPlugin>
               <groupId>org.spire-math</groupId>
-              <artifactId>kind-projector_${scala.binary.version}</artifactId>
+              <artifactId>kind-projector_${scala.compat.version}</artifactId>
               <version>0.9.4</version>
             </compilerPlugin>
           </compilerPlugins>
