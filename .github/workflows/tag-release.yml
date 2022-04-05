@@ -12,7 +12,7 @@ jobs:
       matrix:
         java: [ '8' ]
     steps:
-    - uses: actions/checkout@v2.4.0
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Set up JDK
@@ -22,7 +22,7 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: print Java version
       run: java -version
-    - uses: actions/cache@v2.1.7
+    - uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
