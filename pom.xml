@@ -46,12 +46,12 @@
   </developers>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-artifact-transfer.version>0.13.1</maven-artifact-transfer.version>
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.8.5</maven-plugin-api.version>
     <maven-project.version>3.0</maven-project.version>
     <plexus-utils.version>3.3.1</plexus-utils.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.15</scala.version>
   </properties>
@@ -109,12 +109,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-      <version>${maven-plugin-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
       <version>${maven-plugin-api.version}</version>
       <scope>provided</scope>
@@ -147,6 +141,12 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model-builder</artifactId>
       <version>${maven-project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${maven-plugin-api.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
