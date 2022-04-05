@@ -46,10 +46,15 @@
   </developers>
 
   <properties>
+    <maven-aether-provider.version>3.0</maven-aether-provider.version>
     <maven-artifact-transfer.version>0.13.1</maven-artifact-transfer.version>
+    <maven-artifact.version>3.0</maven-artifact.version>
+    <maven-core.version>3.0</maven-core.version>
+    <maven-model.version>3.0</maven-model.version>
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.8.5</maven-plugin-api.version>
     <maven-project.version>3.0</maven-project.version>
+    <maven-settings.version>3.0</maven-settings.version>
     <plexus-utils.version>3.3.1</plexus-utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scala.binary.version>2.12</scala.binary.version>
@@ -110,25 +115,25 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>${maven-plugin-api.version}</version>
+      <version>${maven-artifact.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>${maven-project.version}</version>
+      <version>${maven-core.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings</artifactId>
-      <version>${maven-project.version}</version>
+      <version>${maven-settings.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings-builder</artifactId>
-      <version>${maven-project.version}</version>
+      <version>${maven-settings.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -140,19 +145,19 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model-builder</artifactId>
-      <version>${maven-project.version}</version>
+      <version>${maven-model.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>${maven-plugin-api.version}</version>
+      <version>${maven-model.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-aether-provider</artifactId>
-      <version>${maven-project.version}</version>
+      <version>${maven-aether-provider.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
