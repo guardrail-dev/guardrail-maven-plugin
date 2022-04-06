@@ -50,7 +50,7 @@
     <maven-artifact-transfer.version>0.13.1</maven-artifact-transfer.version>
     <maven-artifact.version>3.0</maven-artifact.version>
     <maven-core.version>3.0</maven-core.version>
-    <maven-model.version>3.0</maven-model.version>
+    <maven-model.version>3.8.5</maven-model.version>
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.8.5</maven-plugin-api.version>
     <maven-project.version>3.0</maven-project.version>
