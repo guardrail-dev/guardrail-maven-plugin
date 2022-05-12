@@ -212,7 +212,7 @@
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-scala-http4s_2.12</artifactId>
-      <version>0.70.0</version>
+      <version>0.71.0</version>
     </dependency>
   </dependencies>
 
