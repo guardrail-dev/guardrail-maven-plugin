@@ -202,7 +202,7 @@
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-scala-akka-http_2.12</artifactId>
-      <version>0.70.0</version>
+      <version>0.74.0</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
