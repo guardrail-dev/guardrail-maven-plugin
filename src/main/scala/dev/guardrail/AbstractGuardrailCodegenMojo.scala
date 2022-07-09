@@ -201,8 +201,17 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo w
           case ModuleConflict(section) =>
             getLog.error(s"Error: Too many modules specified for ${section}")
             throw new CodegenFailedException()
-          case UnconsumedModules(modules) =>
-            getLog.error(s"Error: Unconsumed modules: ${modules.mkString(", ")}")
+          case UnspecifiedModules(choices) =>
+            val result =
+              choices.toSeq.sortBy(_._1).foldLeft(Seq.empty[String]) { case (acc, (module, choices)) =>
+                val nextLabel = Option(choices).filter(_.nonEmpty).fold("<no choices found>")(_.toSeq.sorted.mkString(", "))
+                acc :+ s"  ${module}: [${nextLabel}]"
+              }
+            println(s"Unsatisfied module(s):")
+            result.foreach(println)
+            throw new CodegenFailedException()
+          case UnusedModules(unused) =>
+            println(s"Unused modules specified: ${unused.toList.mkString(", ")}")
             throw new CodegenFailedException()
         }, identity)
         //.runEmpty
