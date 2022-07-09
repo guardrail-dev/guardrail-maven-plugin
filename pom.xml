@@ -58,7 +58,7 @@
     <plexus-utils.version>3.4.2</plexus-utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scala.compat.version>2.12</scala.compat.version>
-    <scala.version>2.12.16</scala.version>
+    <scala.version>2.13.8</scala.version>
   </properties>
 
   <profiles>
