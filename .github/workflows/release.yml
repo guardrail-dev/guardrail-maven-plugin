@@ -11,14 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Import GPG key
+      id: import_gpg
+      uses: crazy-max/ghaction-import-gpg@v5
+      with:
+        gpg_private_key: ${{ secrets.PGP_SECRET }}
+        passphrase: ${{ secrets.PGP_PASSPHRASE }}
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
         java-version: 8
         server-id: ossrh
-        gpg-private-key: ${{ secrets.PGP_SECRET }}
-        gpg-passphrase: PGP_PASSPHRASE
         server-username: SONATYPE_USERNAME
         server-password: SONATYPE_PASSWORD
     - name: print Java version
@@ -26,7 +30,6 @@ jobs:
     - name: Build with Maven
       env:
         PGP_KEYID: ${{ secrets.PGP_KEYID }}
-        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
