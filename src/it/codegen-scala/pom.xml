@@ -17,7 +17,7 @@
 
   <properties>
     <scala.binary.version>2.13</scala.binary.version>
-    <scala.version>2.13.4</scala.version>
+    <scala.version>2.13.9</scala.version>
     <junit.version>5.8.2</junit.version>
     <logback.version>1.2.10</logback.version>
     <circe.version>0.13.0</circe.version>
