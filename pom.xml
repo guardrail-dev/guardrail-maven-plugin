@@ -182,7 +182,7 @@
     <dependency>
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-core_2.12</artifactId>
-      <version>0.75.1</version>
+      <version>0.75.3</version>
     </dependency>
     <dependency>
       <groupId>dev.guardrail</groupId>
