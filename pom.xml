@@ -51,7 +51,7 @@
     <maven-artifact.version>3.8.6</maven-artifact.version>
     <maven-core.version>3.8.6</maven-core.version>
     <maven-model.version>3.8.6</maven-model.version>
-    <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
+    <maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.8.6</maven-plugin-api.version>
     <maven-project.version>3.8.6</maven-project.version>
     <maven-settings.version>3.8.6</maven-settings.version>
