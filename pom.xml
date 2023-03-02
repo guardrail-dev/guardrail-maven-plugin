@@ -55,7 +55,7 @@
     <maven-plugin-api.version>3.8.6</maven-plugin-api.version>
     <maven-project.version>3.8.6</maven-project.version>
     <maven-settings.version>3.8.6</maven-settings.version>
-    <plexus-utils.version>3.4.2</plexus-utils.version>
+    <plexus-utils.version>3.5.1</plexus-utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scala.compat.version>2.12</scala.compat.version>
     <scala.version>2.12.17</scala.version>
