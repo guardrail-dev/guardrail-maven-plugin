@@ -4,7 +4,7 @@ import java.io.File
 import org.apache.maven.artifact.DefaultArtifact
 import org.apache.maven.plugin.{AbstractMojo, MojoFailureException}
 import org.apache.maven.plugins.annotations.Parameter
-import org.apache.maven.project.MavenProject
+import org.apache.maven.project.{ DefaultMavenProjectHelper, MavenProject }
 import org.apache.maven.artifact.versioning.VersionRange
 
 abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
@@ -33,13 +33,13 @@ abstract class AbstractGuardrailDeployMojo extends AbstractMojo {
     )({ specFileType =>
       val handler = new GuardrailArtifactHandler(
         specFileType,
-        "/" + groupId.replaceAllLiterally(".", "/") + artifactId,
+        "/" + groupId.replace(".", "/") + artifactId,
         classifier
       )
       val artifact = new DefaultArtifact(groupId, artifactId, VersionRange.createFromVersionSpec(project.getVersion), Constants.SCOPE, `type`, classifier, handler)
       artifact.setFile(specPath)
       artifact.setRelease(!project.getVersion.endsWith("-SNAPSHOT"))
-      project.addAttachedArtifact(artifact)
+      new DefaultMavenProjectHelper().attachArtifact(project, artifact)
     })
   }
 
