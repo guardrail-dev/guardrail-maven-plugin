@@ -57,8 +57,8 @@
     <maven-settings.version>3.9.4</maven-settings.version>
     <plexus-utils.version>3.5.1</plexus-utils.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <scala.compat.version>2.12</scala.compat.version>
-    <scala.version>2.12.18</scala.version>
+    <scala.compat.version>2.13</scala.compat.version>
+    <scala.version>2.13.12</scala.version>
   </properties>
 
   <profiles>
@@ -176,53 +176,10 @@
       <artifactId>plexus-utils</artifactId>
       <version>${plexus-utils.version}</version>
     </dependency>
-    <!-- guardrail modularization means versioning these all separately now. dependabot and scala-steward should do a good job. -->
-    <!-- Additionally, we will likely only want to depend on guardrail and guardrail-core,
-         letting the user specify which modules they want, to cut down on version churn -->
     <dependency>
       <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-core_2.12</artifactId>
-      <version>0.75.3</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-async-http_2.12</artifactId>
-      <version>0.72.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-support_2.12</artifactId>
-      <version>0.73.1</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-dropwizard_2.12</artifactId>
-      <version>0.72.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-java-spring-mvc_2.12</artifactId>
-      <version>0.71.2</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-support_2.12</artifactId>
-      <version>0.75.3</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-akka-http_2.12</artifactId>
-      <version>0.76.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-dropwizard_2.12</artifactId>
-      <version>0.72.0</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.guardrail</groupId>
-      <artifactId>guardrail-scala-http4s_2.12</artifactId>
-      <version>0.76.1</version>
+      <artifactId>guardrail-core_${scala.compat.version}</artifactId>
+      <version>1.0.0-M1</version>
     </dependency>
   </dependencies>
 
