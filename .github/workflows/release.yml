@@ -30,15 +30,5 @@ jobs:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
-        if [[ "$GITHUB_REF" = refs/heads/* ]]; then
-            export VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/heads/};
-            exit 1
-        elif [[ "$GITHUB_REF" = refs/tags/* ]]; then
-            export VERSIONING_GIT_TAG=${GITHUB_REF#refs/tags/v};
-        elif [[ "$GITHUB_REF" = refs/pull/*/merge ]]; then
-            VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/};
-            export VERSIONING_GIT_BRANCH=${VERSIONING_GIT_BRANCH%/merge};
-            exit 1
-        fi
         mvn -B --no-transfer-progress clean deploy -Possrh
         git checkout pom.xml
