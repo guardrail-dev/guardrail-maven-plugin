@@ -17,6 +17,19 @@ Add to your `pom.xml`:
       <groupId>dev.guardrail</groupId>
       <artifactId>guardrail-maven-plugin</artifactId>
       <version>Please use the latest available release!</version>
+      <dependencies>
+        <!-- List the guardrail modules you wish to use. For more, see the module lists here: https://guardrail.dev/ -->
+        <dependency>
+          <groupId>dev.guardrail</groupId>
+          <artifactId>guardrail-java-dropwizard_2.13</artifactId>  <!-- SpringMVC also available! -->
+          <version>...</version>
+        </dependency>
+        <dependency>
+          <groupId>dev.guardrail</groupId>
+          <artifactId>guardrail-java-async-http_2.13</artifactId>
+          <version>...</version>
+        </dependency>
+      </dependencies>
       <executions>
         <!-- This execution generates an API client from an OpenAPI spec file -->
         <execution>

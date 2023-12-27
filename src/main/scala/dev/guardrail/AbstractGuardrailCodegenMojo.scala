@@ -12,7 +12,7 @@ import org.apache.maven.plugins.annotations.{Component, Parameter}
 import org.apache.maven.project.{DefaultProjectBuildingRequest, MavenProject}
 import org.apache.maven.shared.transfer.artifact.DefaultArtifactCoordinate
 import org.apache.maven.shared.transfer.artifact.resolve.{ArtifactResolver, ArtifactResolverException}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.AnsiColor
 import scala.language.higherKinds
 import scala.util.control.NonFatal
@@ -28,7 +28,10 @@ sealed abstract class Phase(val root: String)
 object Main extends Phase("main")
 object Test extends Phase("test")
 
-abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo with GuardrailRunner {
+abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
+  def guardrailModulePrefix: String
+
+  val runner = new GuardrailRunner() {}
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
 
@@ -80,6 +83,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo w
   @Parameter(property = "customExtraction")
   var customExtraction: Boolean = _
 
+  val scalaCompatVersion: String = "2.13"
+
   override def execute(): Unit = {
     if (!outputPath.exists()) {
       outputPath.mkdirs()
@@ -124,25 +129,25 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo w
         case x => throw new MojoExecutionException(s"Unsupported codegen type: ${x}")
       }
 
-      val arg = Args.empty.copy(
-        kind=_kind,
-        specPath=Some(_specPath.getCanonicalPath),
-        packageName=Option(packageName).map(_.trim.split('.').toList),
-        dtoPackage=Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList),
-        context=Context.empty.copy(
-          customExtraction=Option(customExtraction).getOrElse(Context.empty.customExtraction),
-          framework=Option(framework),
-          tracing=Option(tracing).getOrElse(Context.empty.tracing),
-          modules=Option(modules).fold(Context.empty.modules)(_.asScala.toList.map(_.toString))
-        ),
-        imports=Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString))
-      )
+      val arg = Args.empty
+        .withKind(_kind)
+        .withSpecPath(Some(_specPath.getCanonicalPath))
+        .withPackageName(Option(packageName).map(_.trim.split('.').toList))
+        .withDtoPackage(Option(dtoPackage).toList.flatMap(_.split('.').filterNot(_.isEmpty).toList))
+        .withContext(
+          Context.empty
+            .withCustomExtraction(Option(customExtraction).getOrElse(Context.empty.customExtraction))
+            .withFramework(Option(framework))
+            .withTracing(Option(tracing).getOrElse(Context.empty.tracing))
+            .withModules(Option(modules).fold(Context.empty.modules)(_.asScala.toList.map(_.toString)))
+        )
+        .withImports(Option(customImports).fold[List[String]](List.empty)(_.asScala.toList.map(_.toString)))
 
       val logLevel = Option(System.getProperty("guardrail.loglevel")).flatMap(LogLevels.apply).getOrElse(LogLevels.Warning)
 
       getLog.info(s"Generating ${_kind} from ${specDesc}")
 
-      guardrailTask(List((_language, arg)), outputPath)(logLevel)
+      guardrailTask(_language, arg, outputPath)(logLevel)
     } catch {
       case NonFatal(e) =>
         getLog.error("Failed to generate client", e)
@@ -151,15 +156,9 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo w
   }
 
   type Language = String
-  def guardrailTask(tasks: List[(Language, Args)], sourceDir: java.io.File)(implicit logLevel: LogLevel): Seq[java.io.File] = {
-    val preppedTasks: Map[String, NonEmptyList[Args]] = tasks.foldLeft(Map.empty[String, NonEmptyList[Args]]) { case (acc, (language, args)) =>
-      val prepped = args.copy(outputPath=Some(sourceDir.getPath))
-      acc.updated(language, acc.get(language).fold(NonEmptyList.one(prepped))(_ :+ prepped))
-    }
-
+  def guardrailTask(language: String, arg: Args, sourceDir: java.io.File)(implicit logLevel: LogLevel): Seq[java.io.File] = {
     val /*(logger,*/ paths/*)*/ =
-      guardrailRunner
-        .apply(preppedTasks)
+      runner.guardrailRunner(language, Array(arg.withOutputPath(Some(sourceDir.getPath))))
         .fold[List[java.nio.file.Path]]({
           case MissingArg(args, Error.ArgName(arg)) =>
             getLog.error(s"Missing argument: ${AnsiColor.BOLD}${arg}${AnsiColor.RESET} (In block ${args})")
@@ -168,7 +167,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo w
             getLog.error(s"""${AnsiColor.RED}Missing dependency:${AnsiColor.RESET}
             |${AnsiColor.BOLD}<dependency>
             |  <groupId>dev.guardrail</groupId>
-            |  <artifactId>${name}_2.12</artifactId>
+            |  <artifactId>${guardrailModulePrefix}-${name}_${scalaCompatVersion}</artifactId>
             |  <version>Check latest version!</version>
             |</dependency>${AnsiColor.RESET}
             |""".stripMargin)
