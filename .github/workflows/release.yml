@@ -31,4 +31,5 @@ jobs:
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
         mvn -B --no-transfer-progress clean deploy -Possrh
+        git diff pom.xml
         git checkout pom.xml
