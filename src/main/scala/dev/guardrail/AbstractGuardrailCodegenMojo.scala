@@ -29,6 +29,8 @@ object Main extends Phase("main")
 object Test extends Phase("test")
 
 abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
+  def guardrailModulePrefix: String
+
   val runner = new GuardrailRunner() {}
   @Parameter(defaultValue = "${project.build.directory}/generated-sources/guardrail-sources", property = "outputPath", required = true)
   def outputPath: File
@@ -80,6 +82,8 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
 
   @Parameter(property = "customExtraction")
   var customExtraction: Boolean = _
+
+  val scalaCompatVersion: String = "2.13"
 
   override def execute(): Unit = {
     if (!outputPath.exists()) {
@@ -163,7 +167,7 @@ abstract class AbstractGuardrailCodegenMojo(phase: Phase) extends AbstractMojo {
             getLog.error(s"""${AnsiColor.RED}Missing dependency:${AnsiColor.RESET}
             |${AnsiColor.BOLD}<dependency>
             |  <groupId>dev.guardrail</groupId>
-            |  <artifactId>${name}_2.12</artifactId>
+            |  <artifactId>${guardrailModulePrefix}-${name}_${scalaCompatVersion}</artifactId>
             |  <version>Check latest version!</version>
             |</dependency>${AnsiColor.RESET}
             |""".stripMargin)
