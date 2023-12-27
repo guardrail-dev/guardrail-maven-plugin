@@ -35,7 +35,6 @@ jobs:
             exit 1
         elif [[ "$GITHUB_REF" = refs/tags/* ]]; then
             export VERSIONING_GIT_TAG=${GITHUB_REF#refs/tags/v};
-            mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$VERSIONING_GIT_TAG
         elif [[ "$GITHUB_REF" = refs/pull/*/merge ]]; then
             VERSIONING_GIT_BRANCH=${GITHUB_REF#refs/};
             export VERSIONING_GIT_BRANCH=${VERSIONING_GIT_BRANCH%/merge};
