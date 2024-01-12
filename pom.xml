@@ -51,7 +51,7 @@
     <maven-artifact.version>3.9.4</maven-artifact.version>
     <maven-core.version>3.9.4</maven-core.version>
     <maven-model.version>3.9.4</maven-model.version>
-    <maven-plugin-annotations.version>3.9.0</maven-plugin-annotations.version>
+    <maven-plugin-annotations.version>3.11.0</maven-plugin-annotations.version>
     <maven-plugin-api.version>3.9.4</maven-plugin-api.version>
     <maven-project.version>3.9.4</maven-project.version>
     <maven-settings.version>3.9.4</maven-settings.version>
